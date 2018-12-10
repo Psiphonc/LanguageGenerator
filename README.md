@@ -12,7 +12,7 @@ if length of ss <= len:
 
 ​		if s contains t?
 
-​			s = ss replaces all t with all rhs in P
+​			s = ss replaces all t with all right hand side in P
 
 ​			use ss to generate new sentences
 
@@ -23,9 +23,5 @@ if length of ss <= len:
 ​		add ss to ret
 
 return ret as result 
-
-```
-
-```
 
 ```
