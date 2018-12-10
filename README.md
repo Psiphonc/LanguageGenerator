@@ -2,9 +2,9 @@
 
 | Variable |            meaning            |
 | :------: | :---------------------------: |
-|    ss    |         Start symbol          |
-|  length  | specific length given by user |
-|   ret    |          Result list          |
+|    ss    |         start symbol          |
+|  len  | specific length given by user |
+|   ret    |          result list          |
 
 ```
 
