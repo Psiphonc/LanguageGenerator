@@ -7,6 +7,8 @@ public class LanguageGenerator {
 
     ArrayList<Production> P;
 
+    HashSet<String> LHS=new HashSet<>();
+
     static class Production {
         String lhs;
         String rhs;
@@ -43,6 +45,10 @@ public class LanguageGenerator {
         V = v;
         T = t;
         P = p;
+        for (Production s :
+                p) {
+            LHS.add(s.lhs);
+        }
     }
 
     public LanguageGenerator(FileInputStream fis) {
@@ -84,20 +90,18 @@ public class LanguageGenerator {
     public ArrayList<String> generate(String start, int length) {
         ArrayList<String> ret = new ArrayList<>();
         if (start.length() <= length) {
-            boolean final_flag = true;
             for (String t :
-                    V) {
+                    LHS) {
                 if (start.contains(t)) {
                     ArrayList<String> allRhs = getAllRhs(t);
                     for (String rhs :
                             allRhs) {
                         ret.addAll(generate(start.replace(t, rhs), length));
-                        final_flag = false;
                     }
                 }
-                if (final_flag)
-                    ret.add(start);
             }
+            if (isFinal(start))
+                ret.add(start);
         }
         return ret;
     }
@@ -113,19 +117,35 @@ public class LanguageGenerator {
         return ret;
     }
 
+    private boolean isFinal(String s){
+        for (String v :
+                V) {
+            if (s.contains(v))
+                return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         HashSet<String> V = new HashSet<>();
         HashSet<Character> T = new HashSet<>();
-        V.add("A");
-        T.add('0');
-        T.add('1');
+        V.add("S");V.add("A");V.add("B");V.add("C");V.add("D");
+        T.add('a');T.add('b');T.add('c');T.add('d');T.add('#');
         ArrayList<Production> productions = new ArrayList<>();
-        productions.add(new Production("A", "1A0"));
-        productions.add(new Production("A", "0A1"));
-        productions.add(new Production("A", "0"));
-        productions.add(new Production("A", "1"));
+        productions.add(new Production("S", "ABCD"));
+        productions.add(new Production("S", "abc#"));
+        productions.add(new Production("A", "aaA"));
+        productions.add(new Production("AB", "aabbB"));
+        productions.add(new Production("BC", "bbccC"));
+        productions.add(new Production("cC", "cccC"));
+        productions.add(new Production("CD", "ccd#"));
+        productions.add(new Production("CD", "d#"));
+        productions.add(new Production("CD", "#d"));
         LanguageGenerator LG = new LanguageGenerator(V, T, productions);
-        ArrayList<String> ret = LG.generate("A", 5);
-        System.out.println(ret.toString());
+        ArrayList<String> ret = LG.generate("S", 30);
+//        System.out.println(ret.toString());
+        for (String s: ret) {
+            System.out.println(s);
+        }
     }
 }

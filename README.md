@@ -5,12 +5,14 @@
 |    ss    |         start symbol          |
 |  len  | specific length given by user |
 |   ret    |          result list          |
+|   LHS    |          left hand side list in P         |
+|   rhs    |          right hand side string in P         |
 
 ```
 
 if length of ss <= len:
 
-	loop for each t in V:
+	loop for each t in LHS:
 
 		if s contains t:
 
