@@ -10,9 +10,9 @@ if length of ss <= len:
 
 	loop for each t in V:
 
-		if s contains t?
+		if s contains t:
 
-			s = ss replaces all t with all rhs in P
+			s = ss replaces t with all rhs in P
 
 			use s to generate new sentences
 
