@@ -1,8 +1,10 @@
-### Result list:ret
+### Pseudocode of the main algorithm
 
-### Start symbol:ss
-
-### Final length:len
+| Variable |            meaning            |
+| :------: | :---------------------------: |
+|    ss    |         Start symbol          |
+|  length  | specific length given by user |
+|   ret    |          Result list          |
 
 ```
 
