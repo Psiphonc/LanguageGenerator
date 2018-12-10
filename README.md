@@ -28,6 +28,8 @@ return ret as result
 
 ```
 
+### flow diagram
+(may not present in github)
 ```flow
 st=>start: Start
 ed=>end: return ret
