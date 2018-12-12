@@ -1,0 +1,11 @@
+A,B,S,C,D
+a,b,c,#,d
+S->ABCD
+S->abc#
+A->aaA
+AB->aabbB
+BC->bbccC
+cC->cccC
+CD->ccd#
+CD->d#
+CD->#d

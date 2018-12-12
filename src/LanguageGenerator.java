@@ -1,5 +1,8 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class LanguageGenerator {
     HashSet<String> V;
@@ -7,7 +10,7 @@ public class LanguageGenerator {
 
     ArrayList<Production> P;
 
-    HashSet<String> LHS=new HashSet<>();
+    HashSet<String> LHS = new HashSet<>();
 
     static class Production {
         String lhs;
@@ -34,10 +37,7 @@ public class LanguageGenerator {
 
         @Override
         public String toString() {
-            return "Production{" +
-                    "lhs='" + lhs + '\'' +
-                    ", rhs='" + rhs + '\'' +
-                    '}';
+            return this.lhs + "->" + this.rhs;
         }
     }
 
@@ -45,14 +45,19 @@ public class LanguageGenerator {
         V = v;
         T = t;
         P = p;
+        initLHS();
+    }
+
+    private void initLHS() {
         for (Production s :
-                p) {
+                P) {
             LHS.add(s.lhs);
         }
     }
 
     public LanguageGenerator(FileInputStream fis) {
         readTable(fis);
+        initLHS();
     }
 
     private void readTable(FileInputStream fis) {
@@ -60,12 +65,10 @@ public class LanguageGenerator {
         BufferedReader br = new BufferedReader(isr);
         String V_t = null;
         String T_t = null;
-        String S_t = null;
-        P = new ArrayList<Production>();
+        P = new ArrayList<>();
         try {
             V_t = br.readLine().replaceAll(" ", "");
             T_t = br.readLine().replaceAll(" ", "");
-            S_t = br.readLine().replaceAll(" ", "");
             String p_line;
             while ((p_line = br.readLine()) != null) {
                 p_line.trim();
@@ -76,7 +79,7 @@ public class LanguageGenerator {
             e.printStackTrace();
         }
 
-        V = new HashSet<String>(Arrays.asList(V_t.split(",")));
+        V = new HashSet<>(Arrays.asList(V_t.split(",")));
 
         T = new HashSet<>();
         String[] T_split = T_t.split(",");
@@ -87,8 +90,8 @@ public class LanguageGenerator {
 
     }
 
-    public ArrayList<String> generate(String start, int length) {
-        ArrayList<String> ret = new ArrayList<>();
+    public HashSet<String> generate(String start, int length) {
+        HashSet<String> ret = new HashSet<>();
         if (start.length() <= length) {
             for (String t :
                     LHS) {
@@ -100,8 +103,9 @@ public class LanguageGenerator {
                     }
                 }
             }
-            if (isFinal(start))
+            if (isFinal(start)) {
                 ret.add(start);
+            }
         }
         return ret;
     }
@@ -117,7 +121,7 @@ public class LanguageGenerator {
         return ret;
     }
 
-    private boolean isFinal(String s){
+    private boolean isFinal(String s) {
         for (String v :
                 V) {
             if (s.contains(v))
@@ -126,26 +130,34 @@ public class LanguageGenerator {
         return true;
     }
 
-    public static void main(String[] args) {
-        HashSet<String> V = new HashSet<>();
-        HashSet<Character> T = new HashSet<>();
-        V.add("S");V.add("A");V.add("B");V.add("C");V.add("D");
-        T.add('a');T.add('b');T.add('c');T.add('d');T.add('#');
-        ArrayList<Production> productions = new ArrayList<>();
-        productions.add(new Production("S", "ABCD"));
-        productions.add(new Production("S", "abc#"));
-        productions.add(new Production("A", "aaA"));
-        productions.add(new Production("AB", "aabbB"));
-        productions.add(new Production("BC", "bbccC"));
-        productions.add(new Production("cC", "cccC"));
-        productions.add(new Production("CD", "ccd#"));
-        productions.add(new Production("CD", "d#"));
-        productions.add(new Production("CD", "#d"));
-        LanguageGenerator LG = new LanguageGenerator(V, T, productions);
-        ArrayList<String> ret = LG.generate("S", 30);
-//        System.out.println(ret.toString());
-        for (String s: ret) {
-            System.out.println(s);
+    @Override
+    public String toString() {
+        String ret = "";
+        for (String s :
+                V) {
+            ret += s;
+            ret += ",";
         }
+        ret = ret.substring(0, ret.length() - 1) + "\n";
+        for (char s :
+                T) {
+            ret += s;
+            ret += ",";
+        }
+        ret = ret.substring(0, ret.length() - 1) + "\n";
+        for (Production s :
+                P) {
+            ret += s.toString();
+            ret += "\n";
+        }
+        return ret;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        FileInputStream fis = new FileInputStream("./srcdata.txt");
+        LanguageGenerator LG = new LanguageGenerator(fis);
+        HashSet<String> ret = LG.generate("S", 30);
+        System.out.println(LG.toString());
+        System.out.println(ret.toString());
     }
 }
