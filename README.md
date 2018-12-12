@@ -14,7 +14,7 @@ if length of ss <= len:
 
 	loop for each t in LHS:
 
-		if s contains t:
+		if ss contains t:
 
 			s = ss replaces t with all rhs in P
 
